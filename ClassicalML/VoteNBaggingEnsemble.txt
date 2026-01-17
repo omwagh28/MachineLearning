@@ -1,0 +1,264 @@
+UPDATED NOTES: BAGGING & VOTING ENSEMBLES
+PART 1: CORE IDEA (FIRST PRINCIPLES)
+Why ensemble methods?
+
+Single model (esp. Decision Tree) → high variance
+
+Small change in data → very different model
+
+Ensemble = combine multiple models → stable prediction
+
+PART 2: BAGGING (BOOTSTRAP AGGREGATING)
+1️⃣ What bagging actually is
+
+Bagging trains multiple models on different bootstrap samples of the training data and aggregates their predictions to reduce variance.
+
+Purpose: reduce variance
+
+Works best with high-variance models
+
+Decision Tree ✅
+
+KNN ❌ (usually)
+
+SVM ❌ (usually)
+
+2️⃣ Bootstrap sampling (VERY IMPORTANT)
+What is bootstrap?
+
+Sampling ROWS
+Sampling is WITH replacement
+Sample size ≈ original training set size
+
+Example:
+
+Original train rows: [1,2,3,4,5,6,7,8]
+Bootstrap sample:    [1,2,2,4,5,7,7,8]
+
+
+Meaning:
+
+Some rows repeat
+Some rows are missing
+
+3️⃣ What does “tree saw a data point” mean?
+
+A model saw a data point if it was included in its bootstrap training set.
+A model did NOT see a data point if it was not included.
+This is the basis of OOB.
+
+4️⃣ Training in bagging
+
+For each base model:
+Draw a bootstrap sample from training data
+Train the base model on that sample
+
+Repeat for n_estimators models
+
+📌 Models are trained independently
+📌 Usually same model type (homogeneous ensemble)
+
+5️⃣ Aggregation (final prediction)
+Bagging Classifier
+
+Each model predicts a class
+Final output = majority vote (mode)
+
+Bagging Regressor
+
+Each model predicts a number
+Final output = mean (or weighted mean)
+
+PART 3: OOB (OUT-OF-BAG) VALIDATION
+6️⃣ What OOB really is
+
+Because of bootstrap sampling:
+~63% of data used per model
+~37% left out
+
+Those left-out rows = OOB samples
+
+7️⃣ What happens in OOB validation
+
+For each training data point:
+Find models that did NOT see this point
+Use only those models to predict it
+Aggregate predictions
+Compare with true value
+Compute OOB error
+
+📌 OOB = validation
+📌 No model is updated
+📌 No weights are changed
+
+8️⃣ VERY IMPORTANT: OOB does NOT update models
+
+❌ Wrong idea:
+
+Train model → check OOB → update hyperparameters inside same model
+
+✅ Correct idea:
+
+Train model → check OOB → discard model → train a NEW model with new hyperparameters
+OOB gives feedback, not learning.
+
+PART 4: HYPERPARAMETER TUNING IN BAGGING
+9️⃣ Hyperparameters in bagging
+
+Common ones:
+
+n_estimators → number of models
+max_depth → complexity of base model
+max_samples → fraction of rows per model
+max_features → fraction of columns per model
+bootstrap → with/without replacement
+bootstrap_features → feature replacement
+
+🔹 Bagging vs related sampling methods
+Method	Rows	Columns
+Bagging	With replacement	All
+Pasting	Without replacement	All
+Random Subspaces	All	Random
+Random Patching	Random	Random
+Random Forest	Bootstrap	Random at split
+10️⃣ Validation choices in bagging
+
+You can choose one:
+
+Option A: OOB validation
+
+Fast
+
+No extra data split
+
+Bagging-specific
+
+Option B: GridSearchCV / CV
+
+General
+
+More expensive
+
+Model-agnostic
+
+📌 GridSearchCV uses cross-validation, NOT OOB
+📌 OOB is optional, not mandatory
+
+11️⃣ Final training & testing (THIS IS IMPORTANT)
+
+Correct final workflow:
+
+Data
+ ↓
+Train–Test split
+ ↓
+Bagging training (bootstrap)
+ ↓
+(Optional) OOB or CV validation
+ ↓
+Choose best hyperparameters
+ ↓
+FINAL training on full training data
+ ↓
+Test once on test data
+
+
+📌 Final model does not need OOB
+📌 Test data is never used for tuning
+
+PART 5: VOTING ENSEMBLE
+12️⃣ What voting ensemble is
+
+Voting combines predictions from multiple models trained on the SAME dataset.
+
+Difference from bagging:
+
+No bootstrap required
+
+Focus on model diversity
+
+Models can be different
+
+13️⃣ Voting Classifier
+Hard Voting
+
+Each model predicts class
+
+Final = mode
+
+Example:
+
+[1,0,1] → 1
+
+Soft Voting
+
+Each model predicts probabilities
+
+Average probabilities
+
+Final = argmax
+
+📌 Mean is taken on probabilities, not class labels
+
+14️⃣ Voting Regressor
+
+Each model predicts a number
+
+Final output = mean / weighted mean
+
+15️⃣ Types of voting ensembles
+Type	Models
+Heterogeneous	Different algorithms
+Homogeneous	Same algorithm, different hyperparameters
+
+Both are valid.
+
+16️⃣ Weighted voting
+
+Better model → higher weight
+
+Used in:
+
+Soft voting (classifier)
+
+Regressor
+
+PART 6: FINAL COMPARISON (LOCK THIS)
+Aspect	Bagging	Voting
+Main goal	Reduce variance	Combine opinions
+Data sampling	Bootstrap	Same data
+Model type	Usually same	Same or different
+Validation	OOB / CV	CV
+Aggregation	Vote / Mean	Vote / Mean
+PART 7: ONE-LINE EXAM ANSWERS
+
+Bagging:
+
+Bagging reduces variance by training multiple models on bootstrap samples and aggregating their predictions.
+
+OOB:
+
+OOB samples act as internal validation data for bagging models.
+
+Voting classifier:
+
+Uses majority voting or averaged probabilities to predict class labels.
+
+Voting regressor:
+
+Uses averaging to predict continuous values.
+
+PART 8: YOUR CONFUSIONS — FINAL CLARIFICATION
+
+✔ Bagging is useful even without OOB
+✔ OOB is only validation, not training
+✔ Hyperparameters are changed between runs, not inside a model
+✔ GridSearchCV does not replace bagging
+✔ Bagging improves predictions, validation measures them
+
+🧠 FINAL MEMORY BLOCK (READ THIS ONCE A DAY)
+
+Bagging improves prediction stability using bootstrap sampling and aggregation.
+OOB or CV evaluates performance.
+Hyperparameters are tuned by retraining new models.
+Voting ensembles combine predictions from multiple models trained on the same data.

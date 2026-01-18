@@ -1,0 +1,126 @@
+
+==============================
+ONE-PAGE CHEAT SHEET
+Decision Tree | Bagging | Random Forest
+==============================
+
+1) DECISION TREE (BASE MODEL)
+------------------------------
+• Works node-by-node (top-down).
+• At EACH node:
+  - Evaluate ALL available features.
+  - Choose the feature that best reduces impurity (Entropy / Gini).
+• Feature importance is LOCAL to a node.
+
+Feature reuse rules:
+• Binary feature (Yes/No): usually used once per branch.
+• Multi-valued categorical feature: can be reused if >1 value remains in a node.
+• Numeric feature: can be reused multiple times with different thresholds.
+
+Stopping conditions:
+• Node becomes pure.
+• No feature improves impurity.
+• max_depth reached.
+• min_samples_leaf reached.
+
+------------------------------
+2) BAGGING + DECISION TREE (ROW SAMPLING ONLY)
+------------------------------
+Goal: Reduce VARIANCE.
+
+What is random?
+• Rows (bootstrap sampling with replacement).
+
+What is NOT random?
+• Features.
+
+Workflow:
+• For each tree:
+  - Sample rows with replacement.
+  - Train a normal decision tree.
+  - At every node → ALL features are evaluated.
+
+Key point:
+• No random feature selection at node level.
+• Splitting logic is SAME as a normal decision tree.
+
+Summary:
+Different rows + ALL features.
+
+------------------------------
+3) BAGGING + TREE WITH COLUMN SAMPLING
+(Random Subspaces / Random Patching)
+------------------------------
+What is random?
+• Columns (features) – selected ONCE per tree.
+• Rows – optional.
+
+Workflow:
+• For each tree:
+  - Select a random subset of features (fixed for the tree).
+  - (Optional) sample rows.
+  - Train a normal decision tree.
+
+Inside the tree:
+• At every node → only the selected features are evaluated.
+• Feature set does NOT change across levels.
+• Features are NOT removed after use.
+
+Summary:
+Different rows (optional) + FIXED feature subset per tree.
+
+------------------------------
+4) RANDOM FOREST
+------------------------------
+Goal: Reduce VARIANCE + reduce TREE CORRELATION.
+
+What is random?
+• Rows (bootstrap).
+• Features (AT EVERY NODE).
+
+Workflow:
+• For each tree:
+  - Sample rows with replacement.
+  - At each node:
+      * Randomly select k features (max_features).
+      * Choose best split ONLY among them.
+
+Key differences from bagging:
+• Feature subset is re-sampled at EVERY node.
+• Trees are highly decorrelated.
+• Trees are usually grown DEEP (unpruned).
+
+Summary:
+Different rows + NEW random features at every split.
+
+------------------------------
+FINAL COMPARISON
+------------------------------
+Decision Tree:
+• Rows: All
+• Features: All
+• Randomness: None
+
+Bagging + Tree:
+• Rows: Random
+• Features: All
+• Randomness level: Dataset
+
+Bagging + Columns:
+• Rows: Optional
+• Features: Random (once per tree)
+• Randomness level: Dataset
+
+Random Forest:
+• Rows: Random
+• Features: Random (every node)
+• Randomness level: Dataset + Node
+
+------------------------------
+MEMORY HOOK
+------------------------------
+Tree        → Best split at each node
+Bagging     → Random rows
+Bagging+Col → Random features once per tree
+RandomForest→ Random rows + random features at every split
+==============================

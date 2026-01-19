@@ -1,0 +1,123 @@
+
+==============================
+ADA BOOST (ADAPTIVE BOOSTING) — CLEAN NOTES
+==============================
+
+1) WHAT IS ADABOOST?
+------------------------------
+AdaBoost is a boosting (ensemble) algorithm that converts many weak learners
+(usually decision stumps) into a strong classifier by training models
+SEQUENTIALLY and focusing more on hard-to-classify points.
+
+• Type: Supervised (Classification)
+• Core idea: Learn from mistakes
+• Nature: Sequential (not parallel)
+
+------------------------------
+2) PROBLEM IT SOLVES
+------------------------------
+Single weak models:
+• Have high bias
+• Make systematic mistakes
+
+AdaBoost solves this by:
+• Giving more importance (weight) to misclassified points
+• Forcing next models to focus on difficult samples
+• Combining models using weighted voting
+
+------------------------------
+3) BASE LEARNER
+------------------------------
+• Usually Decision Stump
+  - Decision Tree with max_depth = 1
+• Predicts labels in {+1, -1}
+
+------------------------------
+4) INITIALIZATION
+------------------------------
+Given N samples:
+• Assign equal weight to all points
+
+w_i = 1 / N
+
+------------------------------
+5) TRAIN FIRST MODEL (m1)
+------------------------------
+• Train decision stump using current weights
+• Compute weighted error:
+
+error = Σ w_i  (only for misclassified points)
+
+------------------------------
+6) COMPUTE MODEL IMPORTANCE (ALPHA)
+------------------------------
+alpha = 1/2 * ln((1 - error) / error)
+
+• Better model → smaller error → larger alpha
+• alpha controls influence of the model
+
+------------------------------
+7) UPDATE SAMPLE WEIGHTS
+------------------------------
+w_i(new) = w_i * exp(-alpha * y_i * y_pred_i)
+
+• Misclassified → weight increases
+• Correctly classified → weight decreases
+
+Normalize weights so that:
+Σ w_i = 1
+
+------------------------------
+8) HOW TO MOVE TO NEXT MODEL (m2)
+------------------------------
+There are TWO equivalent ways:
+
+A) WEIGHTED TRAINING (STANDARD / SKLEARN)
+• Use SAME dataset
+• Use updated sample weights directly
+• No resampling
+• Exact implementation
+
+B) WEIGHTED RESAMPLING (TEACHING / SCRATCH)
+• Convert weights to probability ranges
+• Generate random numbers
+• Resample data according to weights
+• Misclassified points appear more often
+• Approximation of weighted training
+
+------------------------------
+9) TRAIN NEXT MODELS
+------------------------------
+Repeat:
+• Train stump
+• Compute error
+• Compute alpha
+• Update weights
+
+For m1, m2, ..., mM
+
+------------------------------
+10) FINAL PREDICTION
+------------------------------
+Final classifier:
+
+y_hat(x) = sign( Σ alpha_m * h_m(x) )
+
+• Weighted vote of all models
+• NOT simple averaging
+
+------------------------------
+11) KEY CHARACTERISTICS
+------------------------------
+• Sequential learning
+• Reduces bias
+• Sensitive to noisy data & outliers
+• No random sampling by default
+
+------------------------------
+MEMORY HOOK
+------------------------------
+Bagging → random data
+Random Forest → random data + random features
+AdaBoost → sequential + reweight hard points
+==============================

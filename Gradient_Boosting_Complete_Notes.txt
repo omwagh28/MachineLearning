@@ -1,0 +1,126 @@
+
+==============================
+GRADIENT BOOSTING — COMPLETE NOTES
+(Regression + Classification)
+==============================
+
+1) WHAT IS GRADIENT BOOSTING?
+------------------------------
+Gradient Boosting is a boosting ensemble technique that builds models
+sequentially, where each new model learns to correct the mistakes
+(residuals or gradients) made by the previous model.
+
+• Type: Supervised
+• Works for: Regression & Classification
+• Base learner: Shallow Decision Trees
+• Core idea: Minimize a loss function using gradient descent in function space
+
+------------------------------
+2) CORE INTUITION
+------------------------------
+• First model makes a rough prediction
+• Next models learn what was missed
+• Final prediction = sum of all models
+
+------------------------------
+3) GRADIENT BOOSTING — REGRESSION
+------------------------------
+
+STEP 1: INITIAL MODEL
+Initial prediction is a constant:
+y_hat_0 = mean(y)
+
+STEP 2: RESIDUALS
+Residual:
+r_i = y_i - y_hat_i
+
+STEP 3: TRAIN TREE
+• Train a regression tree on residuals
+• Leaf value = mean of residuals in that leaf
+
+STEP 4: UPDATE PREDICTION
+y_hat_{m} = y_hat_{m-1} + η * h_m(x)
+
+STEP 5: REPEAT
+Repeat residual computation and tree training
+
+Final model:
+y_hat(x) = y_hat_0 + Σ η * h_m(x)
+
+------------------------------
+4) GRADIENT BOOSTING — CLASSIFICATION
+------------------------------
+
+Uses differentiable loss functions (e.g., log loss)
+
+STEP 1: INITIAL MODEL
+Initial log-odds:
+F_0 = log(p / (1 - p))
+
+STEP 2: PSEUDO-RESIDUALS
+Pseudo-residual:
+r_i = -∂L/∂F
+
+For log loss:
+r_i = y_i - p_i
+
+STEP 3: TRAIN TREE
+• Tree predicts pseudo-residuals
+
+STEP 4: UPDATE MODEL
+F_m(x) = F_{m-1}(x) + η * h_m(x)
+
+STEP 5: PROBABILITY
+p(x) = sigmoid(F_m(x))
+
+------------------------------
+5) LEARNING RATE (η)
+------------------------------
+• Controls step size
+• Smaller η → better generalization
+• Larger η → faster learning
+
+------------------------------
+6) WHY SHALLOW TREES
+------------------------------
+• Prevent overfitting
+• Each tree is a weak learner
+• Typical depth: 1–3
+
+------------------------------
+7) STOPPING CRITERIA
+------------------------------
+• n_estimators
+• max_depth
+• min loss improvement
+
+------------------------------
+8) REGRESSION vs CLASSIFICATION
+------------------------------
+Regression:
+• Learns residuals
+• Loss: Squared error
+• Output: Continuous
+
+Classification:
+• Learns gradients
+• Loss: Log loss
+• Output: Probability → class
+
+------------------------------
+9) GRADIENT BOOSTING vs ADABOOST
+------------------------------
+AdaBoost:
+• Reweights samples
+• Uses exponential loss
+
+Gradient Boosting:
+• Uses gradients
+• Supports many loss functions
+
+------------------------------
+MEMORY HOOK
+------------------------------
+Mean → Residual → Tree → Add
+Log-odds → Gradient → Tree → Add
+==============================

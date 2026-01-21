@@ -1,0 +1,122 @@
+
+GRADIENT BOOSTING — COMPLETE NOTES
+(Regression & Classification)
+
+1. WHAT IS GRADIENT BOOSTING?
+Gradient Boosting is an ensemble learning technique where models (usually decision trees)
+are trained sequentially. Each new model learns to correct the mistakes of the previous ones.
+
+Type: Supervised
+Works for: Regression and Classification
+Base learner: Shallow Decision Trees
+Core idea: Minimize a loss function using gradient descent
+
+--------------------------------------------------
+2. CORE IDEA
+Model 1 makes an initial prediction.
+Model 2 learns the error of Model 1.
+Model 3 learns the error of (Model 1 + Model 2).
+Final prediction = sum of all models.
+
+==================================================
+GRADIENT BOOSTING — REGRESSION
+==================================================
+
+Target: Continuous
+Loss: Mean Squared Error (MSE)
+
+Step 1: Initial Model
+y_hat_0 = mean(y)
+
+Step 2: Residuals
+r_1 = y - y_hat_0
+
+Step 3: Train Tree
+Train a Decision Tree Regressor with:
+Input: Features (X)
+Target: Residuals (r_1)
+Splits minimize SSE.
+Leaf value = mean of residuals in that leaf.
+
+Step 4: Update Prediction
+y_hat_1 = y_hat_0 + learning_rate * h_1(x)
+
+Step 5: Repeat
+r_m = y - y_hat_(m-1)
+y_hat_m = y_hat_(m-1) + learning_rate * h_m(x)
+
+Final Regression Formula:
+y_hat(x) = y_hat_0 + sum(learning_rate * h_m(x))
+
+==================================================
+GRADIENT BOOSTING — CLASSIFICATION (BINARY)
+==================================================
+
+Target: {0,1}
+Loss: Log Loss
+
+IMPORTANT:
+Trees do NOT output probabilities.
+Trees output corrections in LOG-ODDS space.
+
+Step 1: Initial Model
+p = fraction of positive samples
+F_0 = log(p / (1 - p))
+
+Step 2: Convert to Probability
+p_0 = sigmoid(F_0)
+
+Step 3: Pseudo-Residuals (Gradients)
+r_1 = y - p_0
+
+Step 4: Train Tree
+Train a Decision Tree Regressor with:
+Input: Features (X)
+Target: Residuals (r_1)
+Leaf value = mean residual in that leaf.
+
+Step 5: Update Model (Log-Odds Space)
+F_1 = F_0 + learning_rate * h_1(x)
+
+Step 6: Convert to Probability
+p_1 = sigmoid(F_1)
+
+Step 7: Repeat
+r_m = y - p_(m-1)
+F_m = F_(m-1) + learning_rate * h_m(x)
+p_m = sigmoid(F_m)
+
+Final Classification Formula:
+F(x) = F_0 + sum(learning_rate * h_m(x))
+p(x) = sigmoid(F(x))
+
+--------------------------------------------------
+WHY LOG-ODDS?
+Probabilities are bounded between 0 and 1.
+Log-odds are unbounded, allowing additive modeling.
+Gradient descent with log loss works in log-odds space.
+
+--------------------------------------------------
+KEY HYPERPARAMETERS
+learning_rate
+n_estimators
+max_depth
+max_leaf_nodes
+min_samples_leaf
+
+--------------------------------------------------
+REGRESSION vs CLASSIFICATION SUMMARY
+Regression:
+- Learns residuals
+- Adds predictions directly
+- Uses MSE
+
+Classification:
+- Learns gradients
+- Adds log-odds
+- Uses log loss
+
+--------------------------------------------------
+ONE-LINE EXAM ANSWER
+Gradient Boosting builds models sequentially by fitting each new model
+to the negative gradient of the loss function of the previous model.

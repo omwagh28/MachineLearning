@@ -1,0 +1,63 @@
+
+======================================================
+PRINCIPAL COMPONENT ANALYSIS (PCA) — COMPLETE NOTES
+======================================================
+
+1) WHAT IS PCA?
+PCA is an unsupervised dimensionality reduction and feature extraction technique.
+It transforms data into a new coordinate system to preserve maximum variance.
+
+2) WHY PCA IS NEEDED
+High-dimensional data suffers from noise, redundancy, and computational cost.
+PCA reduces dimensions while preserving structure and information.
+
+3) DATA REPRESENTATION
+Rows represent data points (images).
+Columns represent features (pixels).
+Example: MNIST has 60,000 rows and 784 columns.
+
+4) VARIANCE
+Variance measures how much a feature spreads across all samples.
+High variance means more information.
+Variance is computed column-wise across rows.
+
+5) COVARIANCE
+Covariance measures how two features vary together.
+Cov(X1, X1) = Var(X1).
+
+6) COVARIANCE MATRIX
+A matrix summarizing variances and covariances of all features.
+
+7) EIGENVECTORS AND EIGENVALUES
+Eigenvectors are directions of maximum variance.
+Eigenvalues measure how much variance exists along those directions.
+
+8) PCA INTUITION (2D)
+PCA rotates axes to align with directions of maximum spread of data.
+
+9) PCA STEPS
+- Standardize data
+- Compute covariance matrix
+- Compute eigenvectors and eigenvalues
+- Sort by eigenvalues
+- Select top K eigenvectors
+- Project data
+
+10) EXPLAINED VARIANCE (90% RULE)
+Choose K such that cumulative explained variance >= 90%.
+This is global across the dataset, not per row.
+
+11) PCA IN MNIST
+PCA reduces 784 pixels to ~50–100 components while preserving digit structure.
+
+12) PCA VS FEATURE SELECTION
+Feature selection keeps original features.
+PCA creates new features.
+
+13) PCA + KNN
+PCA reduces dimensions, KNN uses distances on reduced data.
+
+14) KEY TERMS
+Variance, Covariance, Eigenvector, Eigenvalue, Principal Component.
+
+======================================================

@@ -1,0 +1,58 @@
+
+======================================================
+PCA FOUNDATIONS — VARIANCE, COVARIANCE, EIGENVECTORS
+(2D to nD COMPLETE NOTES)
+======================================================
+
+1. DATA REPRESENTATION
+Rows = data points (samples)
+Columns = features (variables)
+
+2. VARIANCE (1D)
+Var(X) = (1/m) Σ (xi − μ)²
+Measures average squared distance from mean (spread).
+
+3. VARIANCE IN 2D AND nD
+Variance is computed per feature across all samples.
+
+4. COVARIANCE
+Cov(Xi, Xj) = (1/m) Σ (xi − μi)(xj − μj)
+Measures how two features vary together.
+Cov(Xi, Xi) = Var(Xi)
+
+5. COVARIANCE MATRIX
+Diagonal = variances
+Off-diagonal = covariances
+
+6. UNIT VECTOR
+A direction with magnitude 1.
+PCA searches among all unit directions.
+
+7. DOT PRODUCT
+Projection of a point onto a direction.
+
+8. VARIANCE ALONG A DIRECTION
+Project all points → compute variance of projections.
+
+9. EIGENVECTORS
+Directions where variance is maximized.
+
+10. EIGENVALUES
+Variance captured along eigenvectors.
+
+11. PRINCIPAL COMPONENTS
+Eigenvectors sorted by eigenvalues.
+
+12. TOTAL VARIANCE
+Sum of all eigenvalues.
+
+13. DIMENSIONALITY REDUCTION
+Keep smallest k such that cumulative variance ≥ 90%.
+
+14. 2D PCA
+2 eigenvectors → keep PC1 for 2D→1D.
+
+15. nD PCA
+n features → n eigenvectors.
+
+======================================================
